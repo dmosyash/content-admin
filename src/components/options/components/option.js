@@ -25,8 +25,8 @@ function renderRadio(field) {
 let Option = (props) => {
     return (
         <Form.Group inline>
-            <Field name={`options[${props.index}].option`} defaultValue={props.text} component={renderOptionText} />
-            <Field name={`options[${props.index}].isCorrect`} defaultValue={props.isCorrect} component={renderRadio} />
+            <Field name={`options[${props.index}].option`} component={renderOptionText} />
+            <Field name={`options[${props.index}].is_correct`} component={renderRadio} />
         </Form.Group>
     );
 }
@@ -38,7 +38,7 @@ Option = reduxForm({
 //   You have to connect() to any reducers that you wish to connect to yourself
   Option = connect(
     state => ({
-      initialValues: state.questionReducer // pull initial values from account reducer
+      initialValues: state.interactionReducer // pull initial values from account reducer
     })               
   )(Option)
 

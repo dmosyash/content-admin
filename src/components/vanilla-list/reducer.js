@@ -1,9 +1,27 @@
-import { SELECT_QUES } from './action';
+import { FETCH_QUESTION, FETCH_INTERACTION, FETCH_OPTIONS } from './action';
 
-export default function QuestionReducer(state = {}, action) {
+export function questions(state = null, action) {
     switch (action.type) {
-        case SELECT_QUES:
-            return action.payload; 
+        case FETCH_QUESTION:
+            return action.payload.data;
+        default:
+            return state;    
+    }
+}
+
+export function interaction(state = null, action) {
+    switch (action.type) {
+        case FETCH_INTERACTION:
+            return action.payload.data; 
+        default:
+            return state;    
+    }
+}
+
+export function options(state = null, action) {
+    switch (action.type) {
+        case FETCH_OPTIONS:
+            return action.payload.data;
         default:
             return state;    
     }

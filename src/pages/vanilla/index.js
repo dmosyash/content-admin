@@ -15,6 +15,10 @@ class Vanilla extends Component {
         const { showQuestionForm } = this.state; 
         this.setState({showQuestionForm: !showQuestionForm});
     }
+
+    componentWillMount() {
+        this.contentId = this.props.match ? this.props.match.params.id : null;
+    }
     
     render() {
         const { showQuestionForm } = this.state;
@@ -23,7 +27,7 @@ class Vanilla extends Component {
                 <Form.Button onClick={this.addNew}>{!showQuestionForm ? 'Add New' : 'Hide Form'}</Form.Button>
                 { showQuestionForm ? <VanillaQuestion /> : '' }
                 { showQuestionForm ? (<div><br /><Form.Button onClick={this.addNew}>Hide Form</Form.Button></div>) : null }
-                <QuestionTable />
+                <QuestionTable contentId={this.contentId}/>
             </div>
         );
     }

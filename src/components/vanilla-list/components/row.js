@@ -3,7 +3,7 @@ import { Button, Modal, Table, Icon } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
 import { connect } from 'react-redux';
 import VanillaQuestion from './../../vanilla-question';
-import { selectQuestion } from './../action';
+import { selectInteraction } from './../../../services/interaction/action';
 
 /**
  * @name Question 
@@ -19,39 +19,39 @@ const difficultyJson = {
 
 class Question extends Component {
     passData = () => {
-        this.props.selectQuestion(this.props.data);
+        console.log('row: ', this.props.data);
+        this.props.selectInteraction(this.props.data);
     }
 
-    getOptionStyle = (option) => {
-        let style = {};
-        if(option.hasOwnProperty('isCorrect') && option.isCorrect) {
-            style.backgroundColor = 'green';
+    updateOptions = row => {
+        this.options = [];
+        for(let i=0; i<4; i++) {
+            let json = {};
+            if(row.options[i]) {
+                json.correct = row.options[i].is_correct;
+                json.option = row.options[i].option;
+            } else {
+                json.correct = false;
+                json.option = '';                
+            }
+            this.options.push(json);
         }
-        return style;
-    }
-
-    getOption = (index) => {
-        const { options } = this.props.data;
-        let style = {};
-        if(options[index].hasOwnProperty('isCorrect') && options[index].isCorrect) {
-            style.backgroundColor = 'green';
-        }
-        return (<Table.Cell style={style}>{options[index].option}</Table.Cell>);
     }
 
     render() {
         const row = this.props.data;
+        this.updateOptions(row);
         let tableRow = (
             <Table.Row onClick={this.passData}>
                 <Table.Cell><span className="handle"><Icon name="list layout" /></span>{row.index}</Table.Cell>
                 <Table.Cell singleLine>{row.id}</Table.Cell>
                 <Table.Cell>{difficultyJson[row.difficulty]}</Table.Cell>
-                <Table.Cell> {row.question} {row.question.audio} </Table.Cell>
-                <Table.Cell> {row.explanation} {row.explanation.audio} </Table.Cell>
-                <Table.Cell positive={row.options[0].isCorrect} negative={!row.options[0].isCorrect}> {row.options[0].option} </Table.Cell>
-                <Table.Cell  positive={row.options[1].isCorrect} negative={!row.options[1].isCorrect}> {row.options[1].option} </Table.Cell>
-                <Table.Cell positive={row.options[2].isCorrect} negative={!row.options[2].isCorrect}> {row.options[2].option} </Table.Cell>
-                <Table.Cell positive={row.options[3].isCorrect} negative={!row.options[3].isCorrect}> {row.options[3].option} </Table.Cell>
+                <Table.Cell> {row.question}<br /> <audio controls><source src={row.question_audio_path} /></audio> </Table.Cell>
+                <Table.Cell> {row.explanation} <audio controls><source src={row.explanation_audio_path}/></audio> </Table.Cell>
+                <Table.Cell positive={this.options[0].correct} negative={!this.options[0].correct}> {this.options[0].option} </Table.Cell>
+                <Table.Cell  positive={this.options[1].correct} negative={!this.options[1].correct}> {this.options[1].option} </Table.Cell>
+                <Table.Cell positive={this.options[2].correct} negative={!this.options[2].correct}> {this.options[2].option} </Table.Cell>
+                <Table.Cell positive={this.options[3].correct} negative={!this.options[3].correct}> {this.options[3].option} </Table.Cell>
                 <Table.Cell> <Button circular icon="delete" color="red" inverted></Button> 
                 </Table.Cell>
             </Table.Row>
@@ -68,4 +68,4 @@ class Question extends Component {
     }
 }
 
-export default connect(null, { selectQuestion })(Question);
+export default connect(null, { selectInteraction })(Question);

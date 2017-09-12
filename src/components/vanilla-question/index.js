@@ -17,6 +17,9 @@ class VanillaQuestion extends Component {
 
     addQuestion = (values) => {
         const { options, difficulty, changeBG, files } = this.props;
+        const { insertDifficulty } = this.props;
+        difficulty.values.content = this.props.contentId;
+        insertDifficulty(difficulty.values);
         values.options = options.values.options;
         values.difficulty = difficulty.values.difficulty;
         values = {...values, ...files}
@@ -88,7 +91,7 @@ VanillaQuestion = connect(
         options: state.form.optionForm,
         difficulty: state.form.difficultyForm,
         files: state.dragDropReducer,
-        initialValues: state.questionReducer // pull initial values from account reducer
+        initialValues: state.interactionReducer // pull initial values from account reducer
     }),
     ({ changeBG })               
 )(VanillaQuestion)

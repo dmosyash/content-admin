@@ -4,6 +4,7 @@ import 'semantic-ui-css/semantic.min.css';
 import Question from './components/row';
 import { connect } from 'react-redux';
 import Sortable from 'sortablejs';
+import { fetchQuestion, fetchInteraction, fetchOptions } from './action';
 
 /**
  * @name QuestionTable 
@@ -12,10 +13,42 @@ import Sortable from 'sortablejs';
 
  class QuestionTable extends Component {
     populateTable = () => {
-        return this.props.questions.map( v => {
-            return <Question key={v.id} data={v} />
-        })
+        let { vanilla, interaction, options } = this.props;
+        if(!vanilla || !interaction || !options) {
+            return null;
+        }
+        return vanilla.map( v => {
+            v.options = [];
+            if(options !== null) {
+                for(let i=0; i<options.length; i++) {
+                    if(v.interaction === options[i].vanilla) {
+                        v.options.push(options[i]);
+                        options.splice(i, 1);
+                        i--;
+                    }
+                }
+            }
+            if(interaction !== null) {
+                for(let j=0; j<interaction.length; j++) {
+                    if(v.interaction === interaction[j].id) {
+                        v = {...v, ...interaction[j]}
+                        interaction.splice(j, 1);
+                        j--;
+                    }
+                }
+            }
+            v.question_audio_path = 'https://lgwarehouse.s3.amazonaws.com/media/resources/slide/5683/zeroes-after-decimals.mp3';
+            return <Question key={v.id} data={v} />;
+        });
     } 
+
+    componentWillMount() {
+        const { fetchQuestion, fetchInteraction, fetchOptions } = this.props;
+        const contentId = this.props.contentId;
+        fetchQuestion({interaction__content: contentId});
+        fetchInteraction({content: contentId});
+        fetchOptions({vanilla__interaction__content: contentId});
+    }
     
     componentDidMount() {
         var tb = document.getElementById('tbody');
@@ -47,4 +80,13 @@ import Sortable from 'sortablejs';
     }
  }
 
- export default connect(state => ({questions: state.questions}))(QuestionTable);
+QuestionTable = connect(
+    state => ({
+         vanilla: state.vanilla,
+         interaction: state.vanillaInteraction,
+         options: state.vanillaOptions
+    }),
+    ({ fetchQuestion, fetchInteraction, fetchOptions })
+)(QuestionTable)
+
+ export default QuestionTable;

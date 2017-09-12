@@ -88,7 +88,6 @@ class DragDrop extends Component {
     }
 
     render() {        
-        alert('again');
         if(this.state.showPreview) {
             return this.previewElement();
         }

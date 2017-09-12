@@ -1,6 +1,4 @@
-import _ from 'lodash';
-import { reducer as formReducer } from 'redux-form';
-import { SELECT_QUES } from './../vanilla-list/action';
+import { SELECT_INTERACTION } from './../../services/interaction/action';
 import { UPDATE_FILES_DATA } from './action';
 
 function getFilesDetails(data) {
@@ -16,7 +14,7 @@ function getFilesDetails(data) {
 
 export default function DragDropReducer(state = {}, action) {
     switch (action.type) {
-        case SELECT_QUES:
+        case SELECT_INTERACTION:
             let data = action.payload;
             let details = getFilesDetails(data)
             return details;
@@ -25,7 +23,7 @@ export default function DragDropReducer(state = {}, action) {
             console.log(fileData);
             return fileData;
         default:
-            console.log('default');
+            // console.log('default');
             return state;    
     }
 }
