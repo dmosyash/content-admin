@@ -25,7 +25,7 @@ class Vanilla extends Component {
         return (
             <div>
                 <Form.Button onClick={this.addNew}>{!showQuestionForm ? 'Add New' : 'Hide Form'}</Form.Button>
-                { showQuestionForm ? <VanillaQuestion /> : '' }
+                { showQuestionForm ? <VanillaQuestion contentId={this.contentId} /> : '' }
                 { showQuestionForm ? (<div><br /><Form.Button onClick={this.addNew}>Hide Form</Form.Button></div>) : null }
                 <QuestionTable contentId={this.contentId}/>
             </div>

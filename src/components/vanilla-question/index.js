@@ -4,7 +4,7 @@ import { Form } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
 import InteractionDifficulty from './../interaction-difficulty';
-import { changeBG } from './../interaction-difficulty/action';
+import { changeBG, insertDifficulty } from './../interaction-difficulty/action';
 import Options from './../options';
 import DragDrop from './../drag-drop';
 import 'semantic-ui-css/semantic.min.css';
@@ -18,15 +18,17 @@ class VanillaQuestion extends Component {
     addQuestion = (values) => {
         const { options, difficulty, changeBG, files } = this.props;
         const { insertDifficulty } = this.props;
-        difficulty.values.content = this.props.contentId;
-        insertDifficulty(difficulty.values);
-        values.options = options.values.options;
-        values.difficulty = difficulty.values.difficulty;
-        values = {...values, ...files}
+        // values.options = options.values.options;
+        // values.difficulty = difficulty.values.difficulty;
+        // values = {...values, ...files}
         console.log(values);
         changeBG(difficulty.values, (idealBG) => {
             console.log(idealBG);
             values.idealBG = idealBG;
+            difficulty.values.content = this.props.contentId;
+            insertDifficulty(difficulty.values, response => {
+                console.log(response);
+            });
             console.log('Final Product: ', values);
         });
     }
@@ -93,7 +95,7 @@ VanillaQuestion = connect(
         files: state.dragDropReducer,
         initialValues: state.interactionReducer // pull initial values from account reducer
     }),
-    ({ changeBG })               
+    ({ changeBG, insertDifficulty })               
 )(VanillaQuestion)
 
 export default VanillaQuestion;
