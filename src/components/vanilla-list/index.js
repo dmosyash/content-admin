@@ -31,6 +31,7 @@ import { fetchQuestion, fetchInteraction, fetchOptions } from './action';
             if(interaction !== null) {
                 for(let j=0; j<interaction.length; j++) {
                     if(v.interaction === interaction[j].id) {
+                        delete interaction[j].id;
                         v = {...v, ...interaction[j]}
                         interaction.splice(j, 1);
                         j--;

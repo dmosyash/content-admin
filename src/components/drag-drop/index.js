@@ -14,11 +14,11 @@ class DragDrop extends Component {
         super(props);
         this.state = {
             isDropped: false,
-            showPreview: props.initialValues[props.dropFor] ? true : false
+            showPreview: props.initialValues ? props.initialValues[props.dropFor] ? true : false : false
         }
         this.files = [];
         this.fileType = null;
-        this.preview = props.initialValues[props.dropFor];
+        this.preview = props.initialValues ? props.initialValues[props.dropFor] : null;
         this.previewName = null;
     }
     

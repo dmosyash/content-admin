@@ -16,8 +16,8 @@ export default function DragDropReducer(state = {}, action) {
     switch (action.type) {
         case SELECT_INTERACTION:
             let data = action.payload;
-            let details = getFilesDetails(data)
-            return details;
+            // let details = getFilesDetails(data)
+            return data;
         case UPDATE_FILES_DATA:
             let fileData = action.payload;
             console.log(fileData);

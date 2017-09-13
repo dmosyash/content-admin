@@ -4,7 +4,8 @@ import { Form } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
 import InteractionDifficulty from './../interaction-difficulty';
-import { changeBG, insertDifficulty } from './../interaction-difficulty/action';
+import { changeBG, insertDifficulty, updateDifficulty } from './../interaction-difficulty/action';
+import { insertQuestion, insertOption, updateQuestion, updateOption } from './action'
 import Options from './../options';
 import DragDrop from './../drag-drop';
 import 'semantic-ui-css/semantic.min.css';
@@ -13,33 +14,57 @@ class VanillaQuestion extends Component {
     constructor(props) {
         super(props);
         this.options = [{}, {}, {}, {}];
+        this.buttonText = 'Save';
+        this.isUpdate = false;
     }
 
+    componentWillMount() {
+        if(this.props.initialValues) {
+            this.buttonText = 'Update';
+            this.isUpdate = true;
+        }
+    }
+
+    onSubmit = values => this.isUpdate ? this.update(values) : this.addQuestion(values);
+
     addQuestion = (values) => {
+        alert('pod');
         const { options, difficulty, changeBG, files } = this.props;
-        const { insertDifficulty } = this.props;
-        // values.options = options.values.options;
-        // values.difficulty = difficulty.values.difficulty;
-        // values = {...values, ...files}
-        console.log(values);
+        const { insertDifficulty, insertQuestion, insertOption } = this.props;
         changeBG(difficulty.values, (idealBG) => {
-            console.log(idealBG);
-            values.idealBG = idealBG;
+            difficulty.values.idealBG = idealBG;
             difficulty.values.content = this.props.contentId;
             insertDifficulty(difficulty.values, response => {
-                console.log(response);
+                let interactionId = response.data.id;
+                insertQuestion(values, interactionId, this.props.contentType);
+                for(let i=0; i<options.values.options.length; i++) {
+                    let body = options.values.options[i];
+                    body.is_correct = body.is_correct ? true : false;
+                    body.order = i+1; 
+                    insertOption(body, interactionId, this.props.contentType);
+                }
             });
             console.log('Final Product: ', values);
         });
     }
 
-    handleInputChange = (event) => {
-        const target = event.target;
-        const value = target.type === 'checkbox' ? target.checked : target.value;
-        const name = target.name;
-    
-        this.setState({
-          [name]: value
+    update = (values) => {
+        const { options, difficulty, changeBG, files } = this.props;
+        const { updateDifficulty, updateQuestion, updateOption } = this.props;
+        changeBG(difficulty.values, (idealBG) => {
+            difficulty.values.idealBG = idealBG;
+            difficulty.values.content = this.props.contentId;
+            updateDifficulty(difficulty.values, response => {
+                let interactionId = response.data.id;
+                updateQuestion(values, interactionId, this.props.contentType);
+                for(let i=0; i<options.values.options.length; i++) {
+                    let body = options.values.options[i];
+                    body.is_correct = body.is_correct ? true : false;
+                    body.order = i+1; 
+                    updateOption(body, interactionId, this.props.contentType);
+                }
+            });
+            console.log('Final Product: ', values, options.values.options, difficulty.values);
         });
     }
 
@@ -50,7 +75,7 @@ class VanillaQuestion extends Component {
     render() {
         const { handleSubmit } = this.props;
         return (
-            <Form onSubmit={ handleSubmit(this.addQuestion) }>
+            <Form onSubmit={ handleSubmit(this.onSubmit) }>
             <Grid container columns={2} divided>
                 <Grid.Row>
                     <Grid.Column>
@@ -76,8 +101,8 @@ class VanillaQuestion extends Component {
                 </Grid.Row>
             </Grid>
             <Form.Group inline style={{float: 'right'}}>
-                <Form.Button type="submit">Save</Form.Button>
-                <Form.Button>Save and Add</Form.Button>
+                <Form.Button type="submit">{this.buttonText}</Form.Button>
+                {this.isUpdate ? '' : (<Form.Button>Save and Add</Form.Button>)}
             </Form.Group>
             </Form>
         )
@@ -95,7 +120,7 @@ VanillaQuestion = connect(
         files: state.dragDropReducer,
         initialValues: state.interactionReducer // pull initial values from account reducer
     }),
-    ({ changeBG, insertDifficulty })               
+    ({ changeBG, insertDifficulty, insertQuestion, insertOption, updateDifficulty, updateQuestion, updateOption })               
 )(VanillaQuestion)
 
 export default VanillaQuestion;

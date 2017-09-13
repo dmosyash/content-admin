@@ -8,6 +8,7 @@ function getBoardGradeDetails(data) {
         return null;
     }
     let json = {
+        id: data.interaction,
         difficulty: data.difficulty.toString(),
         board: bg[data.ideal_bg].board,
         grade: bg[data.ideal_bg].grade

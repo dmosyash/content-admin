@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { Form } from 'semantic-ui-react';
 import QuestionTable from './../../components/vanilla-list';
 import VanillaQuestion from './../../components/vanilla-question';
-import { Form } from 'semantic-ui-react';
+import { selectInteraction } from './../../services/interaction/action';
 
 class Vanilla extends Component {
     constructor(props) {
@@ -13,6 +15,7 @@ class Vanilla extends Component {
     
     addNew = () => {
         const { showQuestionForm } = this.state; 
+        this.props.selectInteraction(null);
         this.setState({showQuestionForm: !showQuestionForm});
     }
 
@@ -25,7 +28,7 @@ class Vanilla extends Component {
         return (
             <div>
                 <Form.Button onClick={this.addNew}>{!showQuestionForm ? 'Add New' : 'Hide Form'}</Form.Button>
-                { showQuestionForm ? <VanillaQuestion contentId={this.contentId} /> : '' }
+                { showQuestionForm ? <VanillaQuestion contentId={this.contentId} contentType="vanilla" /> : '' }
                 { showQuestionForm ? (<div><br /><Form.Button onClick={this.addNew}>Hide Form</Form.Button></div>) : null }
                 <QuestionTable contentId={this.contentId}/>
             </div>
@@ -33,4 +36,4 @@ class Vanilla extends Component {
     }
 }
 
-export default Vanilla;
+export default connect(null, { selectInteraction })(Vanilla);
