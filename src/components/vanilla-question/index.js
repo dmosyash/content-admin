@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import { Grid } from 'semantic-ui-react';
-import { Form } from 'semantic-ui-react';
+import { Grid, Form } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
 import InteractionDifficulty from './../interaction-difficulty';

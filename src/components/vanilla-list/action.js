@@ -2,7 +2,6 @@ import axios from 'axios';
 import { API_BASE_URL } from './../../services/configVariables'
 
 export const FETCH_QUESTION = 'FETCH_QUESTION';
-export const FETCH_INTERACTION = 'FETCH_INTERACTION';
 export const FETCH_OPTIONS = 'FETCH_OPTIONS';
 export const SET_QUESTION = 'SET_QUESTION';
 
@@ -19,20 +18,6 @@ export function fetchQuestion(data) {
       })
     return {
         type: FETCH_QUESTION,
-        payload: request
-    };
-}
-
-export function fetchInteraction(data) {
-    let request = axios({
-        method:'get',
-        url:`${API_BASE_URL}content/interaction/`,
-        params: data,
-        headers: auth
-      });
-    //   request.then(() => setTimeout(()=> callback(), 100));
-    return {
-        type: FETCH_INTERACTION,
         payload: request
     };
 }

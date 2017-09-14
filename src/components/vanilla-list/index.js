@@ -4,7 +4,8 @@ import 'semantic-ui-css/semantic.min.css';
 import Question from './components/row';
 import { connect } from 'react-redux';
 import Sortable from 'sortablejs';
-import { fetchQuestion, fetchInteraction, fetchOptions } from './action';
+import { fetchQuestion, fetchOptions } from './action';
+import { fetchInteractions } from './../../services/interaction/action';
 
 /**
  * @name QuestionTable 
@@ -33,8 +34,6 @@ import { fetchQuestion, fetchInteraction, fetchOptions } from './action';
                     if(v.interaction === interaction[j].id) {
                         delete interaction[j].id;
                         v = {...v, ...interaction[j]}
-                        interaction.splice(j, 1);
-                        j--;
                     }
                 }
             }
@@ -44,10 +43,10 @@ import { fetchQuestion, fetchInteraction, fetchOptions } from './action';
     } 
 
     componentWillMount() {
-        const { fetchQuestion, fetchInteraction, fetchOptions } = this.props;
+        const { fetchQuestion, fetchInteractions, fetchOptions } = this.props;
         const contentId = this.props.contentId;
         fetchQuestion({interaction__content: contentId});
-        fetchInteraction({content: contentId});
+        fetchInteractions({content: contentId});
         fetchOptions({vanilla__interaction__content: contentId});
     }
     
@@ -84,10 +83,10 @@ import { fetchQuestion, fetchInteraction, fetchOptions } from './action';
 QuestionTable = connect(
     state => ({
          vanilla: state.vanilla,
-         interaction: state.vanillaInteraction,
+         interaction: state.interactions,
          options: state.vanillaOptions
     }),
-    ({ fetchQuestion, fetchInteraction, fetchOptions })
+    ({ fetchQuestion, fetchInteractions, fetchOptions })
 )(QuestionTable)
 
  export default QuestionTable;

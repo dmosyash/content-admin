@@ -44,7 +44,7 @@ class Question extends Component {
         let tableRow = (
             <Table.Row onClick={this.passData}>
                 <Table.Cell><span className="handle"><Icon name="list layout" /></span>{row.index}</Table.Cell>
-                <Table.Cell singleLine>{row.id}</Table.Cell>
+                <Table.Cell singleLine>{row.interaction}</Table.Cell>
                 <Table.Cell>{difficultyJson[row.difficulty]}</Table.Cell>
                 <Table.Cell> {row.question}<br /> <audio controls><source src={row.question_audio_path} /></audio> </Table.Cell>
                 <Table.Cell> {row.explanation} <audio controls><source src={row.explanation_audio_path}/></audio> </Table.Cell>

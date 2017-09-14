@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Form } from 'semantic-ui-react';
+import ContentHeader from './../../components/content-header';
 import QuestionTable from './../../components/vanilla-list';
 import VanillaQuestion from './../../components/vanilla-question';
-import { selectInteraction } from './../../services/interaction/action';
+import { getContent } from './action';
 
 class Vanilla extends Component {
     constructor(props) {
@@ -13,27 +14,36 @@ class Vanilla extends Component {
         }
     }
     
-    addNew = () => {
+    toggleFormVisibility = () => {
         const { showQuestionForm } = this.state; 
-        this.props.selectInteraction(null);
         this.setState({showQuestionForm: !showQuestionForm});
     }
 
     componentWillMount() {
         this.contentId = this.props.match ? this.props.match.params.id : null;
+        this.props.getContent(this.contentId);
     }
     
     render() {
         const { showQuestionForm } = this.state;
+        const { name, content_type, is_approved } = this.props.content;
         return (
             <div>
-                <Form.Button onClick={this.addNew}>{!showQuestionForm ? 'Add New' : 'Hide Form'}</Form.Button>
-                { showQuestionForm ? <VanillaQuestion contentId={this.contentId} contentType="vanilla" /> : '' }
-                { showQuestionForm ? (<div><br /><Form.Button onClick={this.addNew}>Hide Form</Form.Button></div>) : null }
+                <ContentHeader toggleFormVisibility={this.toggleFormVisibility} contentId={this.contentId} name={name} type={content_type} showQuestionForm={showQuestionForm} isApproved={is_approved} />
+                {showQuestionForm ? <VanillaQuestion contentId={this.contentId} contentType={content_type} /> : null }
+                {showQuestionForm ? (<div><br /><Form.Button onClick={this.toggleFormVisibility}>Hide Form</Form.Button></div>) : null }
                 <QuestionTable contentId={this.contentId}/>
             </div>
         );
     }
 }
 
-export default connect(null, { selectInteraction })(Vanilla);
+Vanilla = connect(
+    state => ({
+        content: state.content
+    }),
+    { getContent }
+)
+(Vanilla);
+
+export default Vanilla; 
